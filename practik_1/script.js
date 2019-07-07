@@ -29,28 +29,32 @@ let appData = {
                 let itemIncome = prompt('Какой у вас есть дополнительный заработок?');
                 itemIncome = itemIncome.toUpperCase(0).replace(' ', ',');
                 let cashIncome;
-                do {
-                    cashIncome = +prompt('Сколько в месяц зарабатываете на этом?');
-                    appData.income[itemIncome] = cashIncome;
+                
+                cashIncome = +prompt('Сколько в месяц зарабатываете на этом?');
+                appData.income[itemIncome] = cashIncome;
+                
+                while (isNaN(cashIncome) || cashIncome === '' || cashIncome === null){
+                    console.log('Что-то пошло не так!');
+                    cashIncome++;
                 }
-                while (isNaN(cashIncome) || cashIncome === '' || cashIncome === null);
                 appData.income[itemIncome] = cashIncome;
             }
         }
         if (confirm('Есть ли у вас возможные расходы?')) {
             let addExpenses = prompt('Перечислите через запятую возможные расходы');
             appData.addExpenses = addExpenses.toUpperCase(0).split(',');
-            appData.deposit = confirm('Есть ли у вас депозит в банке?');
-            for (let i = 0; i < 2; i++) {
+            
+
+            for (let i = 0; i < 1; i++) {
                 if (confirm('Есть ли у вас обязательная статья расходов?')) {
                     let sum = prompt('Введите обязательную статью расходов');
                     sum = sum.toUpperCase(0).replace(' ', ',');
                     let cashExpenses;
-                    do {
-                        cashExpenses = +prompt('Во сколько это обойдется?');
+                    cashExpenses = +prompt('Во сколько это обойдется?');
+                    while (isNaN(cashExpenses) || cashExpenses === '' || cashExpenses === null){
+                        console.log('Что-то пошло не так!');
+                        cashExpenses++;
                     }
-
-                    while (isNaN(cashExpenses) || cashExpenses === '' || cashExpenses === null);
 
                     appData.expenses[sum] = cashExpenses;
                 }
@@ -93,16 +97,19 @@ let appData = {
     },
 
     getInfoDeposit: function () {
-        for (let i = 0; i < 2; i++)  {
-        if (appData.deposit) {
+        for (let i = 0; i < 1; i++)  {
+        if (appData.deposit = confirm('Есть ли у вас депозит в банке?')) {
             
                 let procentForDeposit = appData.procentDeposit,
-                    moneyFoeDeposit = appData.moneyDeposit;
-                do {
-                    procentForDeposit = ('Какой годовой процент?');
-                    moneyFoeDeposit = prompt('Какая сумма заложена?');
+                    moneyForDeposit = appData.moneyDeposit;
+                
+                    procentForDeposit = +prompt('Какой годовой процент?');
+                    moneyForDeposit = +prompt('Какая сумма заложена?');
+                while (isNaN(procentForDeposit, moneyForDeposit) || procentForDeposit, moneyForDeposit === '' || procentForDeposit, moneyForDeposit === null) {
+                    console.log('Что-то пошло не так!');
+                    procentForDeposit++;
+                    moneyForDeposit++;
                 }
-                while (isNaN(procentForDeposit, moneyFoeDeposit) || procentForDeposit, moneyFoeDeposit === '' || procentForDeposit, moneyFoeDeposit === null);
             }
         }
     },
