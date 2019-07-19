@@ -20,9 +20,7 @@ window.addEventListener('DOMContentLoaded', function(){
    }
             function updateClock() {
             let timer = getTimeReamaining();
-            timerHours.textContent = timer.hours;
-            timerMinutes.textContent = timer.minutes;
-            timerSeconds.textContent = timer.seconds;
+           
             if(timer.hours < 10) { 
                 timer.hours = '0' + timer.hours;
             }
@@ -32,6 +30,10 @@ window.addEventListener('DOMContentLoaded', function(){
             if(timer.seconds < 10) { 
                 timer.seconds = '0' + timer.seconds;
             }
+
+            timerHours.textContent = timer.hours;
+            timerMinutes.textContent = timer.minutes;
+            timerSeconds.textContent = timer.seconds;
 
             if(timer.timeRemaining > 0) { 
             setInterval(updateClock, 100);
@@ -46,6 +48,6 @@ window.addEventListener('DOMContentLoaded', function(){
 
 }   
 
-    countTimer('31 december 2019');
+    countTimer('20 july 2019');
     
 });
