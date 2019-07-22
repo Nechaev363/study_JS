@@ -57,38 +57,57 @@ window.addEventListener('DOMContentLoaded', function () {
     // menu
 
     const toggleMenu = () => {
-
+        const main = document.querySelector('main');
         const btnMenu = document.querySelector('.menu');
         const menu = document.querySelector('menu');
         const closeBtn = document.querySelector('.close-btn');
         const menuItems = menu.querySelectorAll('ul>li');
+        const a = document.querySelectorAll('a');
         let count = 0;
-        let activeMenu;
-
-
 
         const handLerMenu = () => {
-           
-            activeMenu = requestAnimationFrame(handLerMenu); // присвоил переменной анимацию
-           
-            if(!menu.style.transform  || menu.style.transform === `translate(-100%)`) { //задал условие, при котором меню будет появляться в правом краю. Так как в css заданы параметры transform, манипулирю именно transform. Мнгю появляется даже, если не нажать кнопку меню
-                menu.style.transform = `translate(100%)`; // меню появляется, но часто моргает
-            }else if(document.documentElement.clientWidth < 991){ //анимация отключается, но меню не закрывается
-                cancelAnimationFrame(handLerMenu);
+    
+
+            if(!menu.style.transform  || menu.style.transform === `translate(-100%)`) { 
+                menu.style.transform = `translate(0)`;
             }else {
-                menu.style.transform = `translate(-100%)`; //меню исчезает только при большом экране
+                menu.style.transform = `translate(-100%)`; 
             }
-            // сделал все как в лекции 12
         };
-        activeMenu = requestAnimationFrame(handLerMenu);
+            main.addEventListener('click', (event) => {
+            let target = event.target;
+            target = target.closest('.menu');
+            if(!target) {
+                menu.style.transform = `translate(-100%)`;
+            }else {
+                menu.style.transform = `translate(0)`;
+            }
+        });
+    
+    
+        menu.addEventListener('click', (el) => {
+            let target = el.target;
+            if(target === closeBtn) { 
+                handLerMenu();
+            }
 
+            
 
+            for (let i=0; i < a.length; i++) {
+                target = target.closest('li');
+                if(target === menuItems[i]) {
+                handLerMenu();
+                } 
+            }
+        });
+    
         btnMenu.addEventListener('click', handLerMenu);
-        closeBtn.addEventListener('click', handLerMenu);
-        menuItems.forEach((elem) => elem.addEventListener('click', handLerMenu));
+        
+        
 
     };
     toggleMenu();
+
     //popup
 
     const togglePopup = () => {
@@ -96,18 +115,80 @@ window.addEventListener('DOMContentLoaded', function () {
         const popupBtn = document.querySelectorAll('.popup-btn');
         const popupClose = document.querySelector('.popup-close');
 
+        let count = 0;
+        let animatePopup;
+
+        const animateSnowPopup = () => {
+            animatePopup = requestAnimationFrame(animateSnowPopup);
+
+            count += 0.005;
+            if (count <= 1) {
+                popup.style.opacity = count;
+            } else {
+                cancelAnimationFrame(animateSnowPopup);
+            }
+        };
+
         popupBtn.forEach((elem) => {
             elem.addEventListener('click', () => {
-                popup.style.display = 'block';
+                if (document.documentElement.offsetWidth < 768) {
+                    popup.style.display = 'block';
+                    popup.style.opacity = 1;
+                } else {
+                    popup.style.display = 'block';
+                    count = 0;
+                    animatePopup = requestAnimationFrame(animateSnowPopup);
+                }
+                
             });
         });
 
         popupClose.addEventListener('click', () => {
             popup.style.display = 'none';
         });
+        popup.addEventListener('click', (event) => {
+            let target = event.target;
+            target = target.closest('.popup-content');
+            if(!target) {
+                popup.style.display = 'none';
+            }
+        });
 
     };
 
     togglePopup();
 
+    //Табы
+
+    const tabs = () => {
+        const tabHeader = document.querySelector('.service-header');
+        const tab = tabHeader.querySelectorAll('.service-header-tab');
+        const tabContent = document.querySelectorAll('.service-tab');
+
+        const toggleTabContent = (index) => {
+            for (let i = 0; i < tabContent.length; i++) {
+                if (index === i) {
+                    tab[i].classList.add('active');
+                    tabContent[i].classList.remove('d-none');
+                } else {
+                    tab[i].classList.remove('active');
+                    tabContent[i].classList.add('d-none');
+                }
+            }
+        };
+
+        tabHeader.addEventListener('click', (event) => {
+            let target = event.target;
+                target = target.closest('.service-header-tab');
+
+                if (target) {
+                    tab.forEach((item, i) => {
+                        if (item === target) {
+                            toggleTabContent(i);
+                        }
+                    }); 
+                }
+        });
+    };
+    tabs();
 });
