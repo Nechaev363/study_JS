@@ -91,8 +91,6 @@ window.addEventListener('DOMContentLoaded', function () {
                 handLerMenu();
             }
 
-
-
             for (let i = 0; i < a.length; i++) {
                 target = target.closest('li');
                 if (target === menuItems[i]) {
@@ -198,25 +196,32 @@ window.addEventListener('DOMContentLoaded', function () {
         const portfolioContent = document.querySelector('.portfolio-content');
         const slide = document.querySelectorAll('.portfolio-item');
         const portfolioBtn = document.querySelectorAll('.portfolio-btn');
-        const dot = document.querySelectorAll('.dot');
-        const li = document.querySelectorAll('li');
+        
+        const portfolioDots = document.querySelector('.portfolio-dots');
 
-        const addDot = () => {
-            for (let i=0; i < li.length; i++) {
-                li[i].className += 'dot';
-            }
-        };
+        
+
+        for (let i = 0; i < slide.length; i++) {
+            const li = document.createElement('li');
+            li.classList.add('dot');
+            portfolioDots.appendChild(li);
+            
+        }
+
+        const dot = document.querySelectorAll('.dot');
+
+        
 
         let currentsSlide = 0;
         let interval;
 
         const prevSlide = (elem, index, strClass) => {
-            elem[index].addDot.remove(strClass);
-            
+            elem[index].classList.remove(strClass);
+
         };
 
         const nextSlide = (elem, index, strClass) => {
-            elem[index].addDot.add(strClass);
+            elem[index].classList.add(strClass);
         };
 
         const autoPlaySlide = () => {
@@ -243,7 +248,7 @@ window.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             let target = event.target;
 
-            if(!target.matches('.portfolio-btn, .dot')) {
+            if (!target.matches('.portfolio-btn, .dot')) {
                 return;
             }
 
@@ -261,7 +266,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     }
                 });
             }
-            if(currentsSlide >= slide.length) {
+            if (currentsSlide >= slide.length) {
                 currentsSlide = 0;
             }
             if (currentsSlide < 0) {
@@ -282,11 +287,42 @@ window.addEventListener('DOMContentLoaded', function () {
                 startSlide();
             }
         });
-        // addDot();
+        
         startSlide(1000);
+
 
     };
 
     slider();
+
+
+    
+
+        let img = document.querySelectorAll('.command__photo').forEach((elem) => {
+            let save = elem.getAttribute('src');
+            
+            elem.addEventListener('mouseenter', (event) => {
+                event.target.src = event.target.dataset.img;
+            });
+            elem.addEventListener('mouseout', (event) => {
+                event.target.src = save;
+            });
+            
+
+        });
+        
+
+
+        
+
+    const input = document.querySelectorAll('.calc-item').forEach((e) => {
+
+        e.addEventListener('input', (item) => {
+            item.target.value = item.target.value.replace(/[^0-9]e\+\./g,'');
+        });
+    
+    });
+
+ 
 
 });
