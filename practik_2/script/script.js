@@ -320,7 +320,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     // });
 
-    const calc = (price) => {
+    const calc = (price = 100) => {
 
         const calcBlock = document.querySelector('.calc-block');
         const calcType = document.querySelector('.calc-type');
@@ -341,9 +341,9 @@ window.addEventListener('DOMContentLoaded', function () {
                 countValue += (calcCount.value - 1) / 10;
             }
 
-            if (calcDay.value && calcDay.value < 5) {
+            if (calcDay.value < 5) {
                 dayValue *= 2;
-            } else if (calcDay.value && calcDay.value < 10) {
+            } else if (calcDay.value < 10) {
                 dayValue *= 1.5;
             }
 
