@@ -66,44 +66,42 @@ window.addEventListener('DOMContentLoaded', function () {
         let count = 0;
 
         const handLerMenu = () => {
-    
 
-            if(!menu.style.transform  || menu.style.transform === `translate(-100%)`) { 
+
+            if (!menu.style.transform || menu.style.transform === `translate(-100%)`) {
                 menu.style.transform = `translate(0)`;
-            }else {
-                menu.style.transform = `translate(-100%)`; 
+            } else {
+                menu.style.transform = `translate(-100%)`;
             }
         };
-            main.addEventListener('click', (event) => {
+        main.addEventListener('click', (event) => {
             let target = event.target;
             target = target.closest('.menu');
-            if(!target) {
+            if (!target) {
                 menu.style.transform = `translate(-100%)`;
-            }else {
+            } else {
                 menu.style.transform = `translate(0)`;
             }
         });
-    
-    
+
+
         menu.addEventListener('click', (el) => {
             let target = el.target;
-            if(target === closeBtn) { 
+            if (target === closeBtn) {
                 handLerMenu();
             }
 
-            
-
-            for (let i=0; i < a.length; i++) {
+            for (let i = 0; i < a.length; i++) {
                 target = target.closest('li');
-                if(target === menuItems[i]) {
-                handLerMenu();
-                } 
+                if (target === menuItems[i]) {
+                    handLerMenu();
+                }
             }
         });
-    
+
         btnMenu.addEventListener('click', handLerMenu);
-        
-        
+
+
 
     };
     toggleMenu();
@@ -139,7 +137,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     count = 0;
                     animatePopup = requestAnimationFrame(animateSnowPopup);
                 }
-                
+
             });
         });
 
@@ -149,7 +147,7 @@ window.addEventListener('DOMContentLoaded', function () {
         popup.addEventListener('click', (event) => {
             let target = event.target;
             target = target.closest('.popup-content');
-            if(!target) {
+            if (!target) {
                 popup.style.display = 'none';
             }
         });
@@ -179,16 +177,152 @@ window.addEventListener('DOMContentLoaded', function () {
 
         tabHeader.addEventListener('click', (event) => {
             let target = event.target;
-                target = target.closest('.service-header-tab');
+            target = target.closest('.service-header-tab');
 
-                if (target) {
-                    tab.forEach((item, i) => {
-                        if (item === target) {
-                            toggleTabContent(i);
-                        }
-                    }); 
-                }
+            if (target) {
+                tab.forEach((item, i) => {
+                    if (item === target) {
+                        toggleTabContent(i);
+                    }
+                });
+            }
         });
     };
     tabs();
+
+    // slider
+
+    const slider = () => {
+        const portfolioContent = document.querySelector('.portfolio-content');
+        const slide = document.querySelectorAll('.portfolio-item');
+        const portfolioBtn = document.querySelectorAll('.portfolio-btn');
+        
+        const portfolioDots = document.querySelector('.portfolio-dots');
+
+        
+
+        for (let i = 0; i < slide.length; i++) {
+            const li = document.createElement('li');
+            li.classList.add('dot');
+            portfolioDots.appendChild(li);
+            
+        }
+
+        const dot = document.querySelectorAll('.dot');
+
+        
+
+        let currentsSlide = 0;
+        let interval;
+
+        const prevSlide = (elem, index, strClass) => {
+            elem[index].classList.remove(strClass);
+
+        };
+
+        const nextSlide = (elem, index, strClass) => {
+            elem[index].classList.add(strClass);
+        };
+
+        const autoPlaySlide = () => {
+
+            prevSlide(slide, currentsSlide, 'portfolio-item-active');
+            prevSlide(dot, currentsSlide, 'dot-active');
+            currentsSlide++;
+            if (currentsSlide >= slide.length) {
+                currentsSlide = 0;
+            }
+            nextSlide(slide, currentsSlide, 'portfolio-item-active');
+            nextSlide(dot, currentsSlide, 'dot-active');
+        };
+
+        const startSlide = (time = 3000) => {
+            interval = setInterval(autoPlaySlide, time);
+        };
+
+        const stopSlide = () => {
+            clearInterval(interval);
+        };
+
+        portfolioContent.addEventListener('click', (event) => {
+            event.preventDefault();
+            let target = event.target;
+
+            if (!target.matches('.portfolio-btn, .dot')) {
+                return;
+            }
+
+            prevSlide(slide, currentsSlide, 'portfolio-item-active');
+            prevSlide(dot, currentsSlide, 'dot-active');
+
+            if (target.matches('#arrow-right')) {
+                currentsSlide++;
+            } else if (target.matches('#arrow-left')) {
+                currentsSlide--;
+            } else if (target.matches('.dot')) {
+                dot.forEach((elem, index) => {
+                    if (elem === target) {
+                        currentsSlide = index;
+                    }
+                });
+            }
+            if (currentsSlide >= slide.length) {
+                currentsSlide = 0;
+            }
+            if (currentsSlide < 0) {
+                currentsSlide = slide.length - 1;
+            }
+            nextSlide(slide, currentsSlide, 'portfolio-item-active');
+            nextSlide(dot, currentsSlide, 'dot-active');
+        });
+
+        portfolioContent.addEventListener('mouseover', (event) => {
+            if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+                stopSlide();
+            }
+        });
+
+        portfolioContent.addEventListener('mouseout', (event) => {
+            if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+                startSlide();
+            }
+        });
+        
+        startSlide(1000);
+
+
+    };
+
+    slider();
+
+
+    
+
+        let img = document.querySelectorAll('.command__photo').forEach((elem) => {
+            let save = elem.getAttribute('src');
+            
+            elem.addEventListener('mouseenter', (event) => {
+                event.target.src = event.target.dataset.img;
+            });
+            elem.addEventListener('mouseout', (event) => {
+                event.target.src = save;
+            });
+            
+
+        });
+        
+
+
+        
+
+    const input = document.querySelectorAll('.calc-item').forEach((e) => {
+
+        e.addEventListener('input', (item) => {
+            item.target.value = item.target.value.replace(/[^0-9]e\+\./g,'');
+        });
+    
+    });
+
+ 
+
 });
