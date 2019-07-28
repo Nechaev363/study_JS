@@ -26,7 +26,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
         function updateClock() {
             let timer = getTimeReamaining();
-
             if (timer.hours < 10) {
                 timer.hours = '0' + timer.hours;
             }
@@ -305,7 +304,7 @@ window.addEventListener('DOMContentLoaded', function () {
             event.target.src = save;
         });
 
-        // calculator
+        
 
 
     });
@@ -315,9 +314,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const input = document.querySelectorAll('.calc-item').forEach((e) => {
 
-        e.addEventListener('input', (item) => {
-            item.target.value = item.target.value.replace(/[^0-9]e\+\./g, '');
-        });
+    e.addEventListener('input', (item) => {
+        item.target.value = item.target.value.replace(/[^0-9]e\+\./g, '');
+    });
 
     });
 
@@ -329,7 +328,7 @@ window.addEventListener('DOMContentLoaded', function () {
         const calcCount = document.querySelector('.calc-count');
         const calcDay = document.querySelector('.calc-day');
         const totalValue = document.getElementById('total');
-
+        
 
         const countSum = () => {
             let total = 0;
@@ -373,75 +372,31 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //send-ajax-form
 
-    const sendForm = (id) => {
-        const errorMessage = 'Что-то пошло не так...';
-        const loadMessage = 'Загрузка...';
+    const sendForm = () => {
+        const errorMessage = 'Что-то пошло не так';
+        const loadMessage = 'Загрузка';
         const successMessage = 'Спасибо! Мы скоро с Вами свяжемся!';
 
-
-        const form = document.getElementById(id);
+        const form = document.getElementById('form1');
 
         const statusMessage = document.createElement('div');
         statusMessage.style.cssText = 'font-size: 2rem;';
-
+        
         form.addEventListener('submit', (event) => {
             event.preventDefault();
             form.appendChild(statusMessage);
-            statusMessage.textContent = loadMessage;
+
+            const request = new XMLHttpRequest();
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'multipart/form-data');
             const formData = new FormData(form);
-            let body = {};
-            formData.forEach((val, key) => {
-                body[key] = val;
-            });
-            postData(body, () => {
-                statusMessage.textContent = successMessage;
-            }, (error) => {
-                statusMessage.textContent = errorMessage;
-                console.error(error);
-            });
+            request.send(formData);
+
         });
 
-        const postData = (body, outputData, errorData) => {
-            const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    outputData();
-                    const input = form.querySelectorAll('input');
-                    input.forEach((elem) => {
-                        elem.value = '';
-                        
-                    });
-                } else {
-                    errorData(request.status);
-                }
-            });
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'application/json');
-
-            request.send(JSON.stringify(body));
-        
-        }
-
-        
-
-        
     };
 
-    const phoneForm = document.querySelectorAll('.form-phone').forEach((element) => {
-        element.addEventListener('input', (item) => {
-            item.target.value = item.target.value.replace(/[^0-9]e\+\./gi, '');
-            console.log(typeof(item.target.value));
-            
-        });
-    });
-        
-
-    sendForm('form1');
-    sendForm('form2');
-    sendForm('form3');
+    sendForm();
 
 
 });
