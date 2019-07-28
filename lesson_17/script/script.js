@@ -26,6 +26,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         function updateClock() {
             let timer = getTimeReamaining();
+
             if (timer.hours < 10) {
                 timer.hours = '0' + timer.hours;
             }
@@ -119,7 +120,7 @@ window.addEventListener('DOMContentLoaded', function () {
         const animateSnowPopup = () => {
             animatePopup = requestAnimationFrame(animateSnowPopup);
 
-            count += 0.005;
+            count += 0.5;
             if (count <= 1) {
                 popup.style.opacity = count;
             } else {
@@ -304,7 +305,7 @@ window.addEventListener('DOMContentLoaded', function () {
             event.target.src = save;
         });
 
-        
+        // calculator
 
 
     });
@@ -314,9 +315,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const input = document.querySelectorAll('.calc-item').forEach((e) => {
 
-    e.addEventListener('input', (item) => {
-        item.target.value = item.target.value.replace(/[^0-9]e\+\./g, '');
-    });
+        e.addEventListener('input', (item) => {
+            item.target.value = item.target.value.replace(/[^0-9]e\+\./g, '');
+        });
 
     });
 
@@ -328,7 +329,7 @@ window.addEventListener('DOMContentLoaded', function () {
         const calcCount = document.querySelector('.calc-count');
         const calcDay = document.querySelector('.calc-day');
         const totalValue = document.getElementById('total');
-        
+
 
         const countSum = () => {
             let total = 0;
@@ -372,31 +373,87 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //send-ajax-form
 
-    const sendForm = () => {
-        const errorMessage = 'Что-то пошло не так';
-        const loadMessage = 'Загрузка';
+    const sendForm = (id) => {
+        const errorMessage = 'Что-то пошло не так...';
+        const loadMessage = 'Загрузка...';
         const successMessage = 'Спасибо! Мы скоро с Вами свяжемся!';
 
-        const form = document.getElementById('form1');
+
+        const form = document.getElementById(id);
 
         const statusMessage = document.createElement('div');
         statusMessage.style.cssText = 'font-size: 2rem;';
-        
+
         form.addEventListener('submit', (event) => {
             event.preventDefault();
             form.appendChild(statusMessage);
-
-            const request = new XMLHttpRequest();
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'multipart/form-data');
+            statusMessage.textContent = loadMessage;
             const formData = new FormData(form);
-            request.send(formData);
-
+            let body = {};
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+            postData(body, () => {
+                statusMessage.textContent = successMessage;
+            }, (error) => {
+                statusMessage.textContent = errorMessage;
+                console.error(error);
+            });
         });
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    outputData();
+                    const input = form.querySelectorAll('input');
+                    input.forEach((elem) => {
+                        elem.value = '';
+
+                    });
+                } else {
+                    errorData(request.status);
+                }
+            });
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+
+            request.send(JSON.stringify(body));
+
+        }
+
+
+
 
     };
 
-    sendForm();
+    document.querySelectorAll('.form-phone').forEach((element) => {
+        element.addEventListener('input', (elem) => {
+            elem.target.value = elem.target.value.replace(/[A-z-А-я,\-=!@#№\$%\^&\*\.\/<>\?\(\)~]/gi, '');
+
+        });
+    });
+    document.querySelectorAll('input[type="text"]').forEach((element) => {
+        element.addEventListener('input', (elem) => {
+            elem.target.value = elem.target.value.replace(/[A-z\.\?,0-9\-\+=!@#№\$%\^&\*~]/gi);
+
+        });
+    });
+
+    /* 
+    [] - заключаем несколько символов или символьных классов. Это означает искать любой символ в этих скобках. 
+    -=!@#№*\.\/<>\?\(\)~ исклучаем все символы.
+    $%\^&\ - Каретка ^ совпадает в начале текста, а доллар $ – в конце. Каретку ^ обычно используют, чтобы указать, что регулярное выражение необходимо проверить именно с начала текста. Знак доллара $ используют, чтобы указать, что паттерн должен заканчиваться в конце текста.
+
+    */
+
+
+    sendForm('form1');
+    sendForm('form2');
+    sendForm('form3');
 
 
 });
