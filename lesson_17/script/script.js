@@ -438,7 +438,7 @@ window.addEventListener('DOMContentLoaded', function () {
     });
     document.querySelectorAll('input[type="text"]').forEach((element) => {
         element.addEventListener('input', (elem) => {
-            elem.target.value = elem.target.value.replace(/[A-z\.\?,0-9\-\+=!@#№\$%\^&\*~]/gi);
+            elem.target.value = elem.target.value.replace(/[A-z\.\?,0-9\-\+=!@#№\$%\^&\*~]/gi, '');
 
         });
     });
